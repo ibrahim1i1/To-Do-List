@@ -1,11 +1,18 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { TaskList } from './types/Task';
 import './index.css';
-
 function App() {
-    const [tasks, setTasks] = useState<TaskList>([]);
+    const [tasks, setTasks] = useState<TaskList>(() => {
+        const savedTasks = localStorage.getItem('tasks');
+        return savedTasks ? JSON.parse(savedTasks) : [];
+    });
+
+
     const newTaskRef = useRef<HTMLInputElement>(null);
     const remainingTasks = useMemo(() => tasks.filter((task) => !task.completed).length, [tasks]);
+    useEffect(() => {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    })
 
     const handleAddTask = () => {
         const text = newTaskRef.current?.value;
@@ -33,7 +40,7 @@ function App() {
         setTasks((prev) => prev.filter(task => task.id !== id));
     };
     return (
-        <div className='min-h-screen flex justify-center items-center bg-slate-500'>
+        <div className='min-h-screen flex justify-center items-center'>
             <div className='max-w-md flex flex-col gap-2'>
                 <h1 className='text-2xl font-bold'>Todo List</h1>
                 <div>
