@@ -1,7 +1,6 @@
 export type Task = {
     id:number;
-    completed: boolean;
+    completed:boolean;
     text:string;
 }
-
-export type TaskList = Task[];
+export type TaskList = Task [];
